@@ -35,7 +35,7 @@ namespace SnakeGame
             // Instantiate the food at (x, y)
             Instantiate(foodPrefab,
                         new Vector2(x, y),
-                        Quaternion.identity); // default rotation
+                        Quaternion.identity,this.transform); // default rotation
         }
     }
 }

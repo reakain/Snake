@@ -12,30 +12,48 @@ namespace SnakeGame
         public GameObject snakeGamePrefab;// = Resources.Load("Assets/Prefab/SnakeGamePrefab.prefab");
         public GameObject gameOverPrefab;// = Resources.Load("Assets/Prefab/GameOverPrefab.prefab");
 
+        public bool LoadGameOnStart = false;
+
+        GameObject camera;
+        GameObject startScreen;
+        GameObject gameScreen;
+        GameObject endScreen;
+
         private void Start()
         {
-            LoadSnakeGameInstance(0);
+            if (LoadGameOnStart)
+            {
+                LoadSnakeGameInstance(0);
+            }
         }
 
         public void StartScreen()
         {
-            Object.Destroy(GetComponentInChildren<GameOverScreen>().gameObject);
-            Instantiate(startPrefab, this.transform);
-            GetComponentInChildren<StartScreen>().SetHighScore(highScore);
+            if (endScreen != null)
+            {
+                Object.Destroy(endScreen);
+            }
+            startScreen = Instantiate(startPrefab, this.transform);
+            startScreen.GetComponent<StartScreen>().SetHighScore(highScore);
         }
 
         public void InstantiateGame()
         {
-            Object.Destroy(GetComponentInChildren<StartScreen>().gameObject);
-            Instantiate(snakeGamePrefab,this.transform);
+            if (startScreen != null)
+            {
+                Object.Destroy(startScreen);
+            }
+            gameScreen = Instantiate(snakeGamePrefab,this.transform);
         }
 
         public void GameOver(int score)
         {
-
-            Object.Destroy(GetComponentInChildren<SpawnFood>().gameObject);
-            Instantiate(gameOverPrefab, this.transform);
-            GetComponentInChildren<GameOverScreen>().SetScore(score);
+            if (gameScreen != null)
+            {
+                Object.Destroy(gameScreen);
+            }
+            endScreen = Instantiate(gameOverPrefab, this.transform);
+            endScreen.GetComponent<GameOverScreen>().SetScore(score);
             if (score > highScore)
             {
                 highScore = score;
@@ -44,15 +62,27 @@ namespace SnakeGame
 
         void ClearScreen()
         {
-            Object.Destroy(GetComponentInChildren<GameOverScreen>().gameObject);
-            Object.Destroy(GetComponentInChildren<StartScreen>().gameObject);
-            Object.Destroy(GetComponentInChildren<SpawnFood>().gameObject);
-            Object.Destroy(GetComponentInChildren<Camera>().gameObject);
+            if (endScreen != null)
+            {
+                Object.Destroy(endScreen);
+            }
+            if (startScreen != null)
+            {
+                Object.Destroy(startScreen);
+            }
+            if (gameScreen != null)
+            {
+                Object.Destroy(gameScreen);
+            }
+            if (camera != null)
+            {
+                Object.Destroy(camera);
+            }
         }
 
         void SetCamera()
         {
-            Instantiate(snakeCamera, this.transform);
+            camera = Instantiate(snakeCamera, this.transform);
         }
 
         public void LoadSnakeGameInstance(int score)
